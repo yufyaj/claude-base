@@ -1,8 +1,32 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
-      ,"Skill"
+      "WebSearch",
+      "Skill"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/tdd-guard.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/lint-and-format.sh"
+          }
+        ]
+      }
     ]
   }
 }

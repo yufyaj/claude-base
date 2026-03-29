@@ -5,44 +5,113 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "aiosqlite>=0.22.1",
+    "alembic>=1.18.4",
     "fastapi>=0.135.2",
+    "sqlalchemy>=2.0.48",
     "uvicorn>=0.42.0",
 ]
 
 [dependency-groups]
 dev = [
-    "import-linter>=2.11",
+    "diff-cover>=10.2.0",
+    "httpx>=0.28.1",
+    "mutmut>=3.5.0",
     "mypy>=1.19.1",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.1.0",
+    "pytest-randomly>=4.0.1",
     "ruff>=0.15.8",
+    "tach>=0.34.0",
     "ty>=0.0.26",
 ]
 
-[tool.importlinter]
-root_packages = ["app"]
+[tool.ruff.lint]
+select = [
+    # バグ検出
+    "F",      # pyflakes
+    "B",      # flake8-bugbear
+    "S",      # flake8-bandit (セキュリティ)
+    "BLE",    # flake8-blind-except
+    "T10",    # flake8-debugger
+    "ASYNC",  # flake8-async
+    "PGH",    # pygrep-hooks
 
-[[tool.importlinter.contracts]]
-name = "Clean Architecture Layers"
-type = "layers"
-layers = [
-    "app.presentation",
-    "app.application",
-    "app.domain",
+    # スタイル
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "N",      # pep8-naming
+
+    # モダンPython
+    "UP",     # pyupgrade
+    "FA",     # future-annotations
+    "YTT",    # flake8-2020
+
+    # 型安全性
+    "ANN",    # flake8-annotations
+    "TC",     # flake8-type-checking
+
+    # コード品質
+    "SIM",    # flake8-simplify
+    "C4",     # flake8-comprehensions
+    "C90",    # mccabe (循環的複雑度)
+    "RET",    # flake8-return
+    "PIE",    # flake8-pie
+    "RSE",    # flake8-raise
+    "FURB",   # refurb
+    "PERF",   # Perflint
+
+    # 本番品質
+    "DTZ",    # flake8-datetimez
+    "EM",     # flake8-errmsg
+    "TRY",    # tryceratops
+    "A",      # flake8-builtins
+    "ISC",    # flake8-implicit-str-concat
+    "T20",    # flake8-print
+    "ARG",    # flake8-unused-arguments
+    "PTH",    # flake8-use-pathlib
+    "LOG",    # flake8-logging
+    "G",      # flake8-logging-format
+
+    # import
+    "I",      # isort
+    "ICN",    # flake8-import-conventions
+    "TID",    # flake8-tidy-imports
+
+    # Ruff固有 + フレームワーク
+    "RUF",    # Ruff固有ルール
+    "FAST",   # FastAPI固有
+
+    # テスト
+    "PT",     # flake8-pytest-style
+]
+ignore = [
+    "E501",    # 行長はformatterに任せる
+    "TRY003",  # 長い例外メッセージ (EMと競合)
+    "ISC001",  # ruff formatと競合
 ]
 
-[[tool.importlinter.contracts]]
-name = "Domain must not depend on Infrastructure"
-type = "forbidden"
-source_modules = ["app.domain"]
-forbidden_modules = ["app.infrastructure"]
+[tool.ruff.lint.mccabe]
+max-complexity = 10
 
-[[tool.importlinter.contracts]]
-name = "Application must not depend on Infrastructure"
-type = "forbidden"
-source_modules = ["app.application"]
-forbidden_modules = ["app.infrastructure"]
+[tool.ruff.lint.flake8-annotations]
+allow-star-arg-any = false
 
-[[tool.importlinter.contracts]]
-name = "Application must not depend on Presentation"
-type = "forbidden"
-source_modules = ["app.application"]
-forbidden_modules = ["app.presentation"]
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path", "fastapi.Body", "fastapi.Header"]
+
+# TODO: ty 1.0でAny禁止が実装されたらmypyから移行する
+[tool.mypy]
+strict = true
+disallow_any_explicit = true
+disallow_any_generics = true
+disallow_any_unimported = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=app --cov-branch --cov-report=term --cov-report=lcov -p randomly"
+
+[tool.mutmut]
+paths_to_mutate = "app/"
+tests_dir = "tests/"

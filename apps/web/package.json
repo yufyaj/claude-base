@@ -9,7 +9,11 @@
 		"lint": "eslint",
 		"lint:oxlint": "oxlint",
 		"lint:biome": "biome check .",
-		"generate:api": "openapi-typescript http://localhost:8000/openapi.json -o src/lib/api/schema.d.ts"
+		"generate:api": "openapi-typescript http://localhost:8000/openapi.json -o src/lib/api/schema.d.ts",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"test:mutation": "npx stryker run"
 	},
 	"dependencies": {
 		"next": "16.2.1",
@@ -20,15 +24,23 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.9",
 		"@playwright/test": "^1.58.2",
+		"@stryker-mutator/core": "^9.6.0",
+		"@stryker-mutator/typescript-checker": "^9.6.0",
+		"@stryker-mutator/vitest-runner": "^9.6.0",
 		"@tailwindcss/postcss": "^4",
 		"@types/node": "^20",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
+		"@vitejs/plugin-react": "^6.0.1",
+		"@vitest/coverage-v8": "^4.1.2",
+		"diff-cover": "^2.0.5",
 		"eslint": "^9",
 		"eslint-config-next": "16.2.1",
+		"jsdom": "^29.0.1",
 		"openapi-typescript": "^7.13.0",
 		"oxlint": "^1.57.0",
 		"tailwindcss": "^4",
-		"typescript": "^5"
+		"typescript": "^5",
+		"vitest": "^4.1.2"
 	}
 }

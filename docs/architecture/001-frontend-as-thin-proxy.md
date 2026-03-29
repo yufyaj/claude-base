@@ -52,7 +52,7 @@ Next.js側では、この自動生成クライアントのみを通じてFastAPI
 
 ## バックエンドのアーキテクチャ
 
-FastAPI側はClean Architectureを採用し、import-linterで依存方向を静的解析で強制する。
+FastAPI側はClean Architectureを採用し、Tachで依存方向を静的解析で強制する。
 
 ### レイヤー構成
 
