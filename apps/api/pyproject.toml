@@ -8,3 +8,41 @@ dependencies = [
     "fastapi>=0.135.2",
     "uvicorn>=0.42.0",
 ]
+
+[dependency-groups]
+dev = [
+    "import-linter>=2.11",
+    "mypy>=1.19.1",
+    "ruff>=0.15.8",
+    "ty>=0.0.26",
+]
+
+[tool.importlinter]
+root_packages = ["app"]
+
+[[tool.importlinter.contracts]]
+name = "Clean Architecture Layers"
+type = "layers"
+layers = [
+    "app.presentation",
+    "app.application",
+    "app.domain",
+]
+
+[[tool.importlinter.contracts]]
+name = "Domain must not depend on Infrastructure"
+type = "forbidden"
+source_modules = ["app.domain"]
+forbidden_modules = ["app.infrastructure"]
+
+[[tool.importlinter.contracts]]
+name = "Application must not depend on Infrastructure"
+type = "forbidden"
+source_modules = ["app.application"]
+forbidden_modules = ["app.infrastructure"]
+
+[[tool.importlinter.contracts]]
+name = "Application must not depend on Presentation"
+type = "forbidden"
+source_modules = ["app.application"]
+forbidden_modules = ["app.presentation"]

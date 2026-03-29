@@ -1,0 +1,64 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.9/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"ignoreUnknown": false
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"noExplicitAny": "error"
+			},
+			"style": {
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {
+						"paths": {
+							"prisma": "DB access is forbidden in Next.js. Use the FastAPI backend.",
+							"@prisma/client": "DB access is forbidden in Next.js. Use the FastAPI backend.",
+							"pg": "DB access is forbidden in Next.js. Use the FastAPI backend.",
+							"mysql2": "DB access is forbidden in Next.js. Use the FastAPI backend.",
+							"mongoose": "DB access is forbidden in Next.js. Use the FastAPI backend.",
+							"typeorm": "DB access is forbidden in Next.js. Use the FastAPI backend.",
+							"drizzle-orm": "DB access is forbidden in Next.js. Use the FastAPI backend.",
+							"ioredis": "Infrastructure access is forbidden in Next.js. Use the FastAPI backend.",
+							"redis": "Infrastructure access is forbidden in Next.js. Use the FastAPI backend.",
+							"axios": "Use the auto-generated API client from @/lib/api/client instead.",
+							"got": "Use the auto-generated API client from @/lib/api/client instead.",
+							"node-fetch": "Use the auto-generated API client from @/lib/api/client instead."
+						}
+					}
+				}
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	},
+	"css": {
+		"parser": {
+			"cssModules": true,
+			"tailwindDirectives": true
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	}
+}

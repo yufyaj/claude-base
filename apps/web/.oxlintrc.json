@@ -1,0 +1,95 @@
+{
+	"rules": {
+		"no-restricted-imports": [
+			"error",
+			{
+				"paths": [
+					{
+						"name": "prisma",
+						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+					},
+					{
+						"name": "@prisma/client",
+						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+					},
+					{
+						"name": "pg",
+						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+					},
+					{
+						"name": "mysql2",
+						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+					},
+					{
+						"name": "mongoose",
+						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+					},
+					{
+						"name": "typeorm",
+						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+					},
+					{
+						"name": "drizzle-orm",
+						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+					},
+					{
+						"name": "ioredis",
+						"message": "Infrastructure access is forbidden in Next.js. Use the FastAPI backend."
+					},
+					{
+						"name": "redis",
+						"message": "Infrastructure access is forbidden in Next.js. Use the FastAPI backend."
+					},
+					{
+						"name": "axios",
+						"message": "Use the auto-generated API client from @/lib/api/client instead."
+					},
+					{
+						"name": "got",
+						"message": "Use the auto-generated API client from @/lib/api/client instead."
+					},
+					{
+						"name": "node-fetch",
+						"message": "Use the auto-generated API client from @/lib/api/client instead."
+					}
+				],
+				"patterns": [
+					{
+						"group": ["@aws-sdk/*"],
+						"allowImportNames": [],
+						"message": "AWS SDK is forbidden in Next.js. Use the FastAPI backend. Exception: @aws-sdk/client-cloudwatch-logs (use full path import)."
+					},
+					{
+						"group": ["aws-sdk/*"],
+						"message": "AWS SDK is forbidden in Next.js. Use the FastAPI backend."
+					},
+					{
+						"group": ["@google-cloud/*"],
+						"allowImportNames": [],
+						"message": "GCP SDK is forbidden in Next.js. Use the FastAPI backend. Exception: @google-cloud/logging (use full path import)."
+					},
+					{
+						"group": ["@azure/*"],
+						"allowImportNames": [],
+						"message": "Azure SDK is forbidden in Next.js. Use the FastAPI backend. Exception: @azure/monitor-opentelemetry-exporter, @azure/monitor-ingestion."
+					},
+					{
+						"group": ["firebase-admin/*"],
+						"message": "Firebase Admin is forbidden in Next.js. Use the FastAPI backend."
+					}
+				]
+			}
+		]
+	},
+	"overrides": [
+		{
+			"files": ["src/app/api/**/*.ts", "src/app/api/**/*.tsx"],
+			"rules": {
+				"max-lines": [
+					"error",
+					{ "max": 100, "skipBlankLines": true, "skipComments": true }
+				]
+			}
+		}
+	]
+}
