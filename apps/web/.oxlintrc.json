@@ -6,76 +6,76 @@
 				"paths": [
 					{
 						"name": "prisma",
-						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: FastAPI側にエンドポイントを追加し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください. EXAMPLE: // Bad: import { PrismaClient } from 'prisma' // Good: import { apiClient } from '@/lib/api/client'"
 					},
 					{
 						"name": "@prisma/client",
-						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: FastAPI側にエンドポイントを追加し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください. EXAMPLE: // Bad: import { PrismaClient } from '@prisma/client' // Good: import { apiClient } from '@/lib/api/client'"
 					},
 					{
 						"name": "pg",
-						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: DB操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください."
 					},
 					{
 						"name": "mysql2",
-						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: DB操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください."
 					},
 					{
 						"name": "mongoose",
-						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: DB操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください."
 					},
 					{
 						"name": "typeorm",
-						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: DB操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください."
 					},
 					{
 						"name": "drizzle-orm",
-						"message": "DB access is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: DB操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください."
 					},
 					{
 						"name": "ioredis",
-						"message": "Infrastructure access is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: キャッシュ操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください."
 					},
 					{
 						"name": "redis",
-						"message": "Infrastructure access is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: キャッシュ操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください."
 					},
 					{
 						"name": "axios",
-						"message": "Use the auto-generated API client from @/lib/api/client instead."
+						"message": "WHY: 外部通信は自動生成APIクライアント経由のみ許可(ADR-001参照). FIX: @/lib/api/client の apiClient を使用してください. EXAMPLE: // Bad: import axios from 'axios' // Good: import { apiClient } from '@/lib/api/client'; const { data } = await apiClient.GET('/endpoint')"
 					},
 					{
 						"name": "got",
-						"message": "Use the auto-generated API client from @/lib/api/client instead."
+						"message": "WHY: 外部通信は自動生成APIクライアント経由のみ許可(ADR-001参照). FIX: @/lib/api/client の apiClient を使用してください. EXAMPLE: // Bad: import got from 'got' // Good: import { apiClient } from '@/lib/api/client'; const { data } = await apiClient.GET('/endpoint')"
 					},
 					{
 						"name": "node-fetch",
-						"message": "Use the auto-generated API client from @/lib/api/client instead."
+						"message": "WHY: 外部通信は自動生成APIクライアント経由のみ許可(ADR-001参照). FIX: @/lib/api/client の apiClient を使用してください. EXAMPLE: // Bad: import fetch from 'node-fetch' // Good: import { apiClient } from '@/lib/api/client'; const { data } = await apiClient.GET('/endpoint')"
 					}
 				],
 				"patterns": [
 					{
 						"group": ["@aws-sdk/*"],
 						"allowImportNames": [],
-						"message": "AWS SDK is forbidden in Next.js. Use the FastAPI backend. Exception: @aws-sdk/client-cloudwatch-logs (use full path import)."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: AWS操作はFastAPI側のinfrastructure/external/に実装してください. 例外: ログ用の @aws-sdk/client-cloudwatch-logs のみ許可."
 					},
 					{
 						"group": ["aws-sdk/*"],
-						"message": "AWS SDK is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: AWS操作はFastAPI側のinfrastructure/external/に実装してください."
 					},
 					{
 						"group": ["@google-cloud/*"],
 						"allowImportNames": [],
-						"message": "GCP SDK is forbidden in Next.js. Use the FastAPI backend. Exception: @google-cloud/logging (use full path import)."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: GCP操作はFastAPI側のinfrastructure/external/に実装してください. 例外: ログ用の @google-cloud/logging のみ許可."
 					},
 					{
 						"group": ["@azure/*"],
 						"allowImportNames": [],
-						"message": "Azure SDK is forbidden in Next.js. Use the FastAPI backend. Exception: @azure/monitor-opentelemetry-exporter, @azure/monitor-ingestion."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: Azure操作はFastAPI側のinfrastructure/external/に実装してください. 例外: ログ用の @azure/monitor-opentelemetry-exporter, @azure/monitor-ingestion のみ許可."
 					},
 					{
 						"group": ["firebase-admin/*"],
-						"message": "Firebase Admin is forbidden in Next.js. Use the FastAPI backend."
+						"message": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: Firebase操作はFastAPI側のinfrastructure/external/に実装してください."
 					}
 				]
 			}

@@ -3,6 +3,10 @@
     "allow": [
       "WebSearch",
       "Skill"
+    ],
+    "deny": [
+      "Bash(--no-verify)",
+      "Bash(--no-gpg-sign)"
     ]
   },
   "hooks": {

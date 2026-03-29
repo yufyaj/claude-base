@@ -24,18 +24,18 @@
 					"level": "error",
 					"options": {
 						"paths": {
-							"prisma": "DB access is forbidden in Next.js. Use the FastAPI backend.",
-							"@prisma/client": "DB access is forbidden in Next.js. Use the FastAPI backend.",
-							"pg": "DB access is forbidden in Next.js. Use the FastAPI backend.",
-							"mysql2": "DB access is forbidden in Next.js. Use the FastAPI backend.",
-							"mongoose": "DB access is forbidden in Next.js. Use the FastAPI backend.",
-							"typeorm": "DB access is forbidden in Next.js. Use the FastAPI backend.",
-							"drizzle-orm": "DB access is forbidden in Next.js. Use the FastAPI backend.",
-							"ioredis": "Infrastructure access is forbidden in Next.js. Use the FastAPI backend.",
-							"redis": "Infrastructure access is forbidden in Next.js. Use the FastAPI backend.",
-							"axios": "Use the auto-generated API client from @/lib/api/client instead.",
-							"got": "Use the auto-generated API client from @/lib/api/client instead.",
-							"node-fetch": "Use the auto-generated API client from @/lib/api/client instead."
+							"prisma": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: FastAPI側にエンドポイントを追加し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください.",
+							"@prisma/client": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: FastAPI側にエンドポイントを追加し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください.",
+							"pg": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: DB操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください.",
+							"mysql2": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: DB操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください.",
+							"mongoose": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: DB操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください.",
+							"typeorm": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: DB操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください.",
+							"drizzle-orm": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: DB操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください.",
+							"ioredis": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: キャッシュ操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください.",
+							"redis": "WHY: Next.jsはThin Proxyとして運用する(ADR-001参照). FIX: キャッシュ操作はFastAPI側のinfrastructure層に実装し、npm run generate:api で型を再生成してから @/lib/api/client 経由で呼び出してください.",
+							"axios": "WHY: 外部通信は自動生成APIクライアント経由のみ許可(ADR-001参照). FIX: import { apiClient } from '@/lib/api/client' を使用し、apiClient.GET('/endpoint') で呼び出してください.",
+							"got": "WHY: 外部通信は自動生成APIクライアント経由のみ許可(ADR-001参照). FIX: import { apiClient } from '@/lib/api/client' を使用し、apiClient.GET('/endpoint') で呼び出してください.",
+							"node-fetch": "WHY: 外部通信は自動生成APIクライアント経由のみ許可(ADR-001参照). FIX: import { apiClient } from '@/lib/api/client' を使用し、apiClient.GET('/endpoint') で呼び出してください."
 						}
 					}
 				}

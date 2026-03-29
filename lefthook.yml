@@ -1,0 +1,71 @@
+glob_matcher: doublestar
+
+pre-commit:
+  parallel: true
+  commands:
+    # ===== apps/web (Next.js / TypeScript) =====
+    web-oxlint:
+      root: "apps/web/"
+      glob: "*.{ts,tsx,js,jsx}"
+      run: npx oxlint --fix {staged_files}
+      stage_fixed: true
+
+    web-biome:
+      root: "apps/web/"
+      glob: "*.{ts,tsx,js,jsx,json,css}"
+      run: npx biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      stage_fixed: true
+
+    # ===== apps/api (FastAPI / Python) =====
+    api-ruff-fix:
+      root: "apps/api/"
+      glob: "*.py"
+      run: uv run ruff check --fix {staged_files}
+      stage_fixed: true
+
+    api-ruff-format:
+      root: "apps/api/"
+      glob: "*.py"
+      run: uv run ruff format {staged_files}
+      stage_fixed: true
+
+    # ===== テスト + カバレッジ =====
+    web-test:
+      root: "apps/web/"
+      glob: "*.{ts,tsx}"
+      run: npx vitest run --coverage
+
+    api-test:
+      root: "apps/api/"
+      glob: "*.py"
+      run: uv run pytest
+
+    # ===== 差分カバレッジ =====
+    api-diff-cover:
+      root: "apps/api/"
+      glob: "*.py"
+      run: uv run diff-cover coverage.lcov --fail-under=100
+
+    # ===== アーキテクチャ検証 =====
+    api-tach:
+      root: "apps/api/"
+      glob: "*.py"
+      run: uv run tach check
+
+pre-push:
+  parallel: true
+  commands:
+    web-typecheck:
+      root: "apps/web/"
+      glob: "*.{ts,tsx}"
+      run: npx tsc --noEmit
+
+    api-ty:
+      root: "apps/api/"
+      glob: "*.py"
+      run: uv run ty check
+
+    api-mypy:
+      root: "apps/api/"
+      glob: "*.py"
+      run: uv run mypy .

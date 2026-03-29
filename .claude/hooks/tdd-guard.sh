@@ -1,66 +1,49 @@
 #!/usr/bin/env bash
-set -uo pipefail
+set -euo pipefail
 
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+input="$(cat)"
+file="$(jq -r '.tool_input.file_path // .tool_input.path // empty' <<< "$input")"
 
-if [[ -z "$FILE_PATH" ]]; then
+if [[ -z "$file" ]]; then
   exit 0
 fi
 
 # テストファイル・設定ファイル・型定義等は除外
-if [[ "$FILE_PATH" == *.test.* ]] || \
-   [[ "$FILE_PATH" == *.spec.* ]] || \
-   [[ "$FILE_PATH" == *test_* ]] || \
-   [[ "$FILE_PATH" == *_test.py ]] || \
-   [[ "$FILE_PATH" == *conftest.py ]] || \
-   [[ "$FILE_PATH" == *__init__.py ]] || \
-   [[ "$FILE_PATH" == *.config.* ]] || \
-   [[ "$FILE_PATH" == *.json ]] || \
-   [[ "$FILE_PATH" == *.md ]] || \
-   [[ "$FILE_PATH" == *.css ]] || \
-   [[ "$FILE_PATH" == *.d.ts ]] || \
-   [[ "$FILE_PATH" == *.toml ]] || \
-   [[ "$FILE_PATH" == *.lock ]] || \
-   [[ "$FILE_PATH" == *.yaml ]] || \
-   [[ "$FILE_PATH" == *.yml ]] || \
-   [[ "$FILE_PATH" == *.sh ]]; then
-  exit 0
-fi
+case "$file" in
+  *.test.*|*.spec.*|*test_*|*_test.py|*conftest.py|*__init__.py) exit 0 ;;
+  *.config.*|*.json|*.md|*.css|*.d.ts|*.toml|*.lock|*.yaml|*.yml|*.sh) exit 0 ;;
+esac
+
+PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 
 # apps/web: コロケーション (src/app/page.tsx → src/app/page.test.tsx)
-if [[ "$FILE_PATH" == */apps/web/src/* ]]; then
-  EXT="${FILE_PATH##*.}"
-  BASE="${FILE_PATH%.*}"
-  TEST_FILE="${BASE}.test.${EXT}"
-  SPEC_FILE="${BASE}.spec.${EXT}"
+if [[ "$file" == */apps/web/src/* ]]; then
+  ext="${file##*.}"
+  base="${file%.*}"
+  test_file="${base}.test.${ext}"
+  spec_file="${base}.spec.${ext}"
 
-  if [[ ! -f "$TEST_FILE" ]] && [[ ! -f "$SPEC_FILE" ]]; then
-    cat <<EOF
-{
-  "decision": "block",
-  "reason": "TDD違反: 対応するテストファイルが存在しません。先にテストを書いてください。\n期待されるテストファイル: $TEST_FILE"
-}
-EOF
+  if [[ ! -f "$test_file" ]] && [[ ! -f "$spec_file" ]]; then
+    jq -n --arg test_file "$test_file" '{
+      decision: "block",
+      reason: ("TDD違反: 対応するテストファイルが存在しません. WHY: TDDではテストを先に書く必要があります. FIX: まず " + $test_file + " を作成し、失敗するテストを書いてください. EXAMPLE: // 1. テストファイルを作成\n// 2. 失敗するテストを書く\n// 3. テストが失敗することを確認\n// 4. 実装を書く")
+    }'
     exit 0
   fi
 fi
 
 # apps/api: tests/ディレクトリ (app/domain/entities/user.py → tests/domain/entities/test_user.py)
-if [[ "$FILE_PATH" == */apps/api/app/* ]]; then
-  PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-  REL_PATH="${FILE_PATH##*/apps/api/app/}"
-  DIR_PART=$(dirname "$REL_PATH")
-  FILE_NAME=$(basename "$REL_PATH")
-  TEST_FILE="$PROJECT_ROOT/apps/api/tests/$DIR_PART/test_$FILE_NAME"
+if [[ "$file" == */apps/api/app/* ]]; then
+  rel_path="${file##*/apps/api/app/}"
+  dir_part=$(dirname "$rel_path")
+  file_name=$(basename "$rel_path")
+  test_file="$PROJECT_ROOT/apps/api/tests/$dir_part/test_$file_name"
 
-  if [[ ! -f "$TEST_FILE" ]]; then
-    cat <<EOF
-{
-  "decision": "block",
-  "reason": "TDD違反: 対応するテストファイルが存在しません。先にテストを書いてください。\n期待されるテストファイル: $TEST_FILE"
-}
-EOF
+  if [[ ! -f "$test_file" ]]; then
+    jq -n --arg test_file "$test_file" '{
+      decision: "block",
+      reason: ("TDD違反: 対応するテストファイルが存在しません. WHY: TDDではテストを先に書く必要があります. FIX: まず " + $test_file + " を作成し、失敗するテストを書いてください. EXAMPLE: # 1. テストファイルを作成\n# 2. 失敗するテストを書く (def test_xxx)\n# 3. pytest で失敗を確認\n# 4. 実装を書く")
+    }'
     exit 0
   fi
 fi

@@ -1,0 +1,28 @@
+{
+  "name": "claude-base",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "prepare": "lefthook install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yufyaj/claude-base.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/yufyaj/claude-base/issues"
+  },
+  "homepage": "https://github.com/yufyaj/claude-base#readme",
+  "devDependencies": {
+    "@orangeopensource/hurl": "^7.1.7",
+    "lefthook": "^2.1.4"
+  }
+}

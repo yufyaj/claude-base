@@ -1,0 +1,106 @@
+steps:
+  # ===== apps/api =====
+  - id: api-install
+    name: "ghcr.io/astral-sh/uv:latest"
+    dir: apps/api
+    args: ["uv", "sync"]
+
+  - id: api-lint
+    name: "ghcr.io/astral-sh/uv:latest"
+    dir: apps/api
+    args: ["uv", "run", "ruff", "check", "."]
+    waitFor: ["api-install"]
+
+  - id: api-format-check
+    name: "ghcr.io/astral-sh/uv:latest"
+    dir: apps/api
+    args: ["uv", "run", "ruff", "format", "--check", "."]
+    waitFor: ["api-install"]
+
+  - id: api-type-check
+    name: "ghcr.io/astral-sh/uv:latest"
+    dir: apps/api
+    args: ["uv", "run", "ty", "check"]
+    waitFor: ["api-install"]
+
+  - id: api-mypy
+    name: "ghcr.io/astral-sh/uv:latest"
+    dir: apps/api
+    args: ["uv", "run", "mypy", "."]
+    waitFor: ["api-install"]
+
+  - id: api-tach
+    name: "ghcr.io/astral-sh/uv:latest"
+    dir: apps/api
+    args: ["uv", "run", "tach", "check"]
+    waitFor: ["api-install"]
+
+  - id: api-test
+    name: "ghcr.io/astral-sh/uv:latest"
+    dir: apps/api
+    args: ["uv", "run", "pytest", "--cov=app", "--cov-branch", "--cov-report=lcov"]
+    waitFor: ["api-install"]
+
+  - id: api-diff-cover
+    name: "ghcr.io/astral-sh/uv:latest"
+    dir: apps/api
+    args: ["uv", "run", "diff-cover", "coverage.lcov", "--fail-under=100"]
+    waitFor: ["api-test"]
+
+  - id: api-mutation
+    name: "ghcr.io/astral-sh/uv:latest"
+    dir: apps/api
+    args: ["uv", "run", "mutmut", "run", "--CI"]
+    waitFor: ["api-test"]
+
+  # ===== apps/web =====
+  - id: web-install
+    name: "node:20"
+    dir: apps/web
+    args: ["npm", "ci"]
+
+  - id: web-biome
+    name: "node:20"
+    dir: apps/web
+    args: ["npx", "biome", "check", "."]
+    waitFor: ["web-install"]
+
+  - id: web-oxlint
+    name: "node:20"
+    dir: apps/web
+    args: ["npx", "oxlint"]
+    waitFor: ["web-install"]
+
+  - id: web-typecheck
+    name: "node:20"
+    dir: apps/web
+    args: ["npx", "tsc", "--noEmit"]
+    waitFor: ["web-install"]
+
+  - id: web-test
+    name: "node:20"
+    dir: apps/web
+    args: ["npx", "vitest", "run", "--coverage"]
+    waitFor: ["web-install"]
+
+  - id: web-mutation
+    name: "node:20"
+    dir: apps/web
+    args: ["npx", "stryker", "run"]
+    waitFor: ["web-test"]
+
+  # ===== E2E (TODO: インフラ確定後に有効化) =====
+  # - id: e2e-hurl
+  #   name: "node:20"
+  #   dir: apps/api
+  #   args: ["npx", "hurl", "--test", "tests/**/*.hurl", "--variable", "base_url=http://localhost:8000"]
+  #   waitFor: ["api-test", "web-test"]
+
+  # - id: e2e-playwright
+  #   name: "node:20"
+  #   dir: apps/web
+  #   args: ["npx", "playwright", "test"]
+  #   waitFor: ["api-test", "web-test"]
+
+options:
+  logging: CLOUD_LOGGING_ONLY

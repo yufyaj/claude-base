@@ -1,64 +1,41 @@
 #!/usr/bin/env bash
-set -uo pipefail
+set -euo pipefail
 
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
-
-if [[ -z "$FILE_PATH" ]]; then
-  exit 0
-fi
+input="$(cat)"
+file="$(jq -r '.tool_input.file_path // .tool_input.path // empty' <<< "$input")"
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-ERROR_OUTPUT=""
+diag=""
 
-if [[ "$FILE_PATH" == */apps/web/* ]]; then
-  cd "$PROJECT_ROOT/apps/web"
+case "$file" in
+  *.ts|*.tsx|*.js|*.jsx)
+    cd "$PROJECT_ROOT/apps/web"
+    npx oxlint --fix "$file" >/dev/null 2>&1 || true
+    npx biome check --write "$file" >/dev/null 2>&1 || true
+    diag="$(npx oxlint "$file" 2>&1 | head -20)"
+    biome_diag="$(npx biome check "$file" 2>&1 | head -20)" || true
+    if echo "$biome_diag" | grep -q "Found .* error"; then
+      diag="${diag}${biome_diag}"
+    fi
+    ;;
+  *.py)
+    cd "$PROJECT_ROOT/apps/api"
+    uv run ruff check --fix "$file" >/dev/null 2>&1 || true
+    uv run ruff format "$file" >/dev/null 2>&1 || true
+    diag="$(uv run ruff check "$file" 2>&1 | head -20)"
+    ty_diag="$(uv run ty check "$file" 2>&1 | head -20)" || true
+    if echo "$ty_diag" | grep -q "error"; then
+      diag="${diag}${ty_diag}"
+    fi
+    ;;
+  *) exit 0 ;;
+esac
 
-  # Biome: format + lint (auto-fix)
-  npx biome check --write "$FILE_PATH" 2>/dev/null || true
-
-  # Biome: 残ったエラーをキャプチャ
-  BIOME_OUT=$(npx biome check "$FILE_PATH" 2>&1) || true
-  if echo "$BIOME_OUT" | grep -q "Found .* error"; then
-    ERROR_OUTPUT+="【Biome Error】\n$BIOME_OUT\n"
-  fi
-
-  # Oxlint: lint only
-  OXLINT_OUT=$(npx oxlint "$FILE_PATH" 2>&1) || true
-  if echo "$OXLINT_OUT" | grep -q "Found .* error"; then
-    ERROR_OUTPUT+="【Oxlint Error】\n$OXLINT_OUT\n"
-  fi
-
-elif [[ "$FILE_PATH" == */apps/api/* ]]; then
-  cd "$PROJECT_ROOT/apps/api"
-
-  # Ruff: format
-  uv run ruff format "$FILE_PATH" 2>/dev/null || true
-
-  # Ruff: lint with auto-fix
-  RUFF_OUT=$(uv run ruff check --fix "$FILE_PATH" 2>&1) || true
-  if [[ -n "$RUFF_OUT" ]]; then
-    ERROR_OUTPUT+="【Ruff Error】\n$RUFF_OUT\n"
-  fi
-
-  # ty: type check
-  TY_OUT=$(uv run ty check "$FILE_PATH" 2>&1) || true
-  if [[ -n "$TY_OUT" ]] && echo "$TY_OUT" | grep -q "error"; then
-    ERROR_OUTPUT+="【ty Error】\n$TY_OUT\n"
-  fi
+if [ -n "$diag" ]; then
+  jq -Rn --arg msg "$diag" '{
+    hookSpecificOutput: {
+      hookEventName: "PostToolUse",
+      additionalContext: $msg
+    }
+  }'
 fi
-
-# エラーがあった場合、Claude Codeにフィードバックを返す
-if [[ -n "$ERROR_OUTPUT" ]]; then
-  ESCAPED_OUTPUT=$(echo -e "$ERROR_OUTPUT" | jq -R -s '.')
-
-  cat <<EOF
-{
-  "hookSpecificOutput": {
-    "additionalContext": "リンター/型チェックエラーが発生しました。以下の出力を確認し、修正してください:\n${ESCAPED_OUTPUT}"
-  }
-}
-EOF
-fi
-
-exit 0
