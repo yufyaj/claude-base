@@ -1,3 +1,28 @@
+# 技術スタック
+## フロントエンド（apps/web）
+- **フレームワーク**: Next.js 16 / React 19
+- **言語**: TypeScript 5
+- **スタイリング**: Tailwind CSS 4
+- **テスト**: Vitest 4 + jsdom / Playwright（E2E）/ Stryker（ミューテーション）
+- **リント**: ESLint 9 + Oxlint + Biome
+- **API連携**: openapi-fetch + openapi-typescript（スキーマ駆動）
+- **カバレッジ**: v8 + diff-cover
+
+## バックエンド（apps/api）
+- **フレームワーク**: FastAPI
+- **言語**: Python 3.13+
+- **ORM / DB**: SQLAlchemy 2 + Alembic + aiosqlite
+- **パッケージ管理**: uv
+- **テスト**: pytest + pytest-asyncio + httpx / mutmut（ミューテーション）
+- **リント / フォーマット**: Ruff（lint + format）
+- **型チェック**: ty（メイン）+ mypy（Any禁止の最終チェック）
+- **アーキテクチャ検証**: tach（依存方向チェック）
+- **カバレッジ**: pytest-cov（ブランチ）+ diff-cover
+
+## インフラ / CI
+- **Git hooks**: Lefthook
+- **CI/CD**: Google Cloud Build
+
 # Git
 - コミットはアトミック（最小で意味のある単位）に保つ
 - 各コミットはテストが通る状態を維持する
