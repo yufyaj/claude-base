@@ -1,34 +1,35 @@
 # Git
 - コミットはアトミック（最小で意味のある単位）に保つ
-- 1コミット = 1つの論理的変更
-- フォーマット変更とロジック変更は別コミットにする
 - 各コミットはテストが通る状態を維持する
 
 # Web検索
-- 検索クエリに年を含める場合、必ず事前にコマンドで現在の日付を取得してから正確な年を使用する
+- 検索に年を含める場合、必ず現在の日付を取得し、取得した年を指定する
 
-# コード設計（SOLID原則に従う）
-- 1つのクラス・関数には1つの役割だけを持たせる
-- 新機能は既存コードを修正せず、新しいクラスや関数を追加して実装する
-- 継承より合成（コンポジション）を優先する
-- 不要なメソッドを持つインターフェースを実装させない
-- 具体的なクラスではなく、インターフェースや抽象クラスに依存する
-- 重複コードは共通処理として抽出する
-- マジックナンバーや固定文字列はハードコーディングせず、定数や設定ファイルに切り出す
-- APIキー、パスワード等の機密情報はコードに含めず、環境変数を使用する
+# 開発コマンド
+## apps/web (Next.js / TypeScript)
+- `npm run dev` — 開発サーバー起動
+- `npm run build` — プロダクションビルド
+- `npm run test` — Vitestでユニットテスト実行
+- `npm run test:watch` — テストをウォッチモードで実行
+- `npm run test:coverage` — カバレッジ付きテスト
+- `npm run test:mutation` — Strykerでミューテーションテスト（CI用）
+- `npm run lint` — ESLint実行
+- `npm run lint:oxlint` — Oxlint実行
+- `npm run lint:biome` — Biome check実行
+- `npm run generate:api` — FastAPIのOpenAPIスキーマからTypeScript型を生成
+- `npx tsc --noEmit` — TypeScript型チェック
+- `npx playwright test` — E2Eテスト
 
-# セキュリティ（OWASP準拠）
-- 入力バリデーション: サーバーサイドで必ず検証、許可リスト方式を優先
-- 出力エンコーディング: XSS防止のため、出力時に適切にエスケープ
-- 認証: パスワードはハッシュ化して保存、多要素認証を検討
-- アクセス制御: 最小権限の原則、ロールベースで制御
-- 暗号化: 機密データは保存時・通信時ともに暗号化、独自実装せず標準ライブラリを使用
-- エラーハンドリング: 詳細なエラー情報をユーザーに露出しない、ログには記録
-- SQLインジェクション対策: プリペアドステートメント/パラメータ化クエリを使用
-
-# デバッグ
-- console.logやprint等のデバッグコードは本番コードに残さない
-
-# 学習機能
-**鉄則: 指摘された内容があれば、CLAUDE.mdの中に追記する**
+## apps/api (FastAPI / Python)
+- `uv run uvicorn main:app --reload` — 開発サーバー起動
+- `uv run pytest` — テスト実行（ブランチカバレッジ + シャッフル付き）
+- `uv run ruff check .` — リント
+- `uv run ruff check --fix .` — リント + 自動修正
+- `uv run ruff format .` — フォーマット
+- `uv run ty check` — 型チェック（メイン）
+- `uv run mypy .` — 型チェック（Any禁止の最終チェック）
+- `uv run tach check` — アーキテクチャ依存方向チェック
+- `uv run diff-cover coverage.lcov --fail-under=100` — 差分カバレッジチェック
+- `uv run mutmut run --CI` — ミューテーションテスト（CI用）
+- `uv run lint-imports` — import-linterによる依存チェック（廃止済み、tachに移行）
 
