@@ -8,8 +8,10 @@
 - プランが承認されたらfeatures.jsonとprogress.jsonにタスクを分解して
 - 現在のタスクの進捗は docs/plan/progress.json を読み取って更新せよ
 - tdd-integrationのSKILLSを使用して実装して
+- 分割した機能実装が1つ終わったら、作業を止めてレビューして
 ## レビュー
 - .claude/rules/security.mdを読み込んでレビューして
 - docs/plan/active_plan.mdを参照した上で、レビューして
 - git diffで差分を取得して
 - 修正されたものだけでなく、呼び出し元や関連のあるソースコードまで調べて、意図した実装になっているのかレビューして
+- レビューは必ずサブエージェントにして
