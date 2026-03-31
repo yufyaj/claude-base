@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# venv
+.venv/
+
+# testing / coverage
+.coverage
+htmlcov/
+coverage.lcov
+.mutmut-cache/
+
+# database
+*.db
+
+# env files
+.env*
+
+# misc
+.DS_Store
+
+# Ruff
+.ruff_cache/
+
+# mypy / ty
+.mypy_cache/
+
+# pytest
+.pytest_cache/
