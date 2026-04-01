@@ -1,14 +1,16 @@
 # タスク進行
-## プランモード
-- 計画した内容は docs/plan/active_plan.mdに記載して
-- 計画したactive-plan.mdの内容が完了したらdocs/plan/completed_plans/連番_概要.mdに移動して
+## 全行程共通
 - ユーザーから要求のない機能や考慮を絶対に入れないでください
 - ユーザーから要求のない機能や考慮が必要と判断した場合、必ず質問するようにしてください
+## プランモード
+- 計画した内容は docs/plan/active_plan.mdに記載して
+- 計画したactive-plan.mdの内容が完了したらdocs/plan/completed_plans/連番_概要/plan.mdに移動して
 ## 実装
 - プランが承認されたらfeatures.jsonとprogress.jsonにタスクを分解して
 - 現在のタスクの進捗は docs/plan/progress.json を読み取って更新せよ
 - tdd-integrationのSKILLSを使用して実装して
 - 分割した機能実装が1つ終わったら、作業を止めてレビューして
+- 実装は可読性を意識してください
 ## レビュー
 - .claude/rules/*を読み込んでレビューして
 - docs/plan/active_plan.mdを参照した上で、レビューして
