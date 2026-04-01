@@ -1,6 +1,6 @@
 ---
 paths:
-  - "apps/api/test/**/*.py"
+  - "apps/api/tests/**/*.py"
   - "apps/web/**/*.test.*"
 ---
 
